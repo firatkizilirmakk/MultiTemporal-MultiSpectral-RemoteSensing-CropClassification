@@ -154,3 +154,36 @@ class CnnNet(nn.Module):
         model_state = snapshot.pop('model_state', snapshot)
         self.load_state_dict(model_state)
         return snapshot
+
+# Ensemble Neural Network combining metric learning and cnn approaches
+# to consider both of these approaches' concerns.
+class EnsembleNet(torch.nn.Module):
+    def __init__(self, metric_model, metric_classifier, classifier):
+        super(EnsembleNet, self).__init__()
+        self.metric = metric_model
+        self.c1 = metric_classifier
+        self.c2 = classifier
+
+        self.c1.linear2 = torch.nn.Identity()
+        self.c2.fc = torch.nn.Identity()
+
+        self.fc = torch.nn.Linear(3168 + 128, 13)
+
+    def forward(self, x):
+        x_clone = x.clone()
+        out1, _ = self.metric.forward(x, x)
+        linear1 = self.c1(out1)
+
+        x_clone = x_clone.view(64, 1, 45 , 13)
+        linear2 = self.c2(x_clone)
+
+        linears =  torch.cat((linear1, linear2), dim = 1)
+        out = self.fc(linears)
+        return out
+
+    def load(self, path):
+        print("loading model from " + path)
+        snapshot = torch.load(path, map_location="cpu")
+        model_state = snapshot.pop('model_state', snapshot)
+        self.load_state_dict(model_state)
+        return snapshot
