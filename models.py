@@ -99,3 +99,58 @@ class ClassificationModel(nn.Module):
         model_state = snapshot.pop('model_state', snapshot)
         self.load_state_dict(model_state)
         return snapshot
+
+# CNN to process temporal and spectral info (45 x 13) as
+# width and height of an image
+class CnnNet(nn.Module):
+
+    def __init__(self, num_classes = 13):
+        self.num_classes = num_classes
+
+        super(CnnNet, self).__init__()
+        self.conv1 = nn.Conv2d(in_channels = 1, out_channels = 12, kernel_size = 3, stride = 1, padding = 1)
+        self.relu1 = nn.ReLU()
+
+        self.conv2 = nn.Conv2d(in_channels = 12, out_channels = 12, kernel_size = 3, stride = 1, padding = 1)
+        self.relu2 = nn.ReLU()
+
+        self.maxpool = nn.MaxPool2d(kernel_size = 2)
+
+        self.conv3 = nn.Conv2d(in_channels = 12, out_channels = 24, kernel_size = 3, stride = 1, padding = 1)
+        self.relu3 = nn.ReLU()
+
+        self.conv4 = nn.Conv2d(in_channels = 24, out_channels = 24, kernel_size = 3, stride = 1, padding = 1)
+        self.relu4 = nn.ReLU()
+
+        self.fc = nn.Linear(in_features = 3168, out_features = num_classes)
+
+    def forward_one(self, x):
+        out = self.conv1(x)
+        out = self.relu1(out)
+
+        out = self.conv2(out)
+        out = self.relu2(out)
+
+        out = self.maxpool(out)
+
+        out = self.conv3(out)
+        out = self.relu3(out)
+
+        out = self.conv4(out)
+        out = self.relu4(out)
+
+        out = out.view(64, -1)
+        out = self.fc(out)
+
+        return out
+
+    def forward(self, x1):
+        out1 = self.forward_one(x1)
+        return out1
+
+    def load(self, path):
+        print("loading model from " + path)
+        snapshot = torch.load(path, map_location="cpu")
+        model_state = snapshot.pop('model_state', snapshot)
+        self.load_state_dict(model_state)
+        return snapshot
