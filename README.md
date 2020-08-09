@@ -38,13 +38,13 @@ There are many methods and techniques applied throughout the development of the 
 *  Siamese LSTM : The network was trained 30 epochs, took nearly one day, where the last training loss was 0.3175. Training was stopped after 5 epoch’s training loss was not decreased by 0.01 with respect to the previous one. This architecture achieved 0.64 as a Kappa score, 0.70 as an overall accuracy, 0.60 as a Mean Precision and 0.58 as a Mean Recall. Below the confusion matrix of the model retrieved on the validation set is shown.
 
 <p align="center">
-  <img src="images/siamese_annot" alt="Confusion matrix of Siamese LSTM" width = "400px">
+  <img src="images/siamese_annot.svg" alt="Confusion matrix of Siamese LSTM" width = "400px">
 </p>
 
 * CNN: The network was trained 45 epochs, took approximately 1 day, with Adam optimizer where initial learning rate was 0.001. Training was stopped after 10 epoch’s training loss was not decreased by 0.01 with respect to the previous one. This architecture achieved 0.61 as a Kappa score, 0.67 as an overall accuracy, 0.62 as a Mean Precision and 0.64 as a Mean Recall. 
 
 <p align="center">
-  <img src="images/cnn_annot" alt="Confusion matrix of CNN" width = "400px">
+  <img src="images/cnn_annot.svg" alt="Confusion matrix of CNN" width = "400px">
 </p>
 
 As seen on the confusion matrix, calculated on the validation set, this structure attached more importance to 4th and 6th classes.
@@ -52,7 +52,7 @@ As seen on the confusion matrix, calculated on the validation set, this structur
 * The network was trained 25 epochs, took nearly 5 days, where the last training loss was 0.64. Training was stopped after 5 epoch’s training loss was not decreased by 0.01 with respect to the previous one. This architecture achieved 0.65 as a Kappa score, 0.71 as an overall accuracy, 0.67 as a Mean Precision and 0.60 as a Mean Recall. 
 
 <p align="center">
-  <img src="images/ensemble_annot" alt="Confusion matrix of Ensemble NN" width = "400px">
+  <img src="images/ensemble_annot.svg" alt="Confusion matrix of Ensemble NN" width = "400px">
 </p>
 
 As seen on the confusion matrix, calculated on the validation set, this structure learned a better metric for classification while considering the less sampled products.
